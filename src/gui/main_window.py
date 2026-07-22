@@ -112,7 +112,7 @@ class MainWindow(QMainWindow):
         before_layout.addWidget(self.before, 1); before_layout.addWidget(QLabel("까지"))
         time_row.addWidget(self.after_field, 1); time_row.addWidget(self.before_field, 1)
 
-        form.addRow("", self.station_fields)
+        form.addRow(self.station_fields)
         form.addRow("출발일", self.travel_date); form.addRow("시간", self.time_fields)
         form.addRow("열차", self.train_type)
         form.addRow("좌석", self.seat); form.addRow("인원", self.passengers); form.addRow("배치", self.strategy)

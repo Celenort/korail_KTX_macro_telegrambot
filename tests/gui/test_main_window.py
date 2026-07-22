@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QFormLayout
 
 from gui.main_window import MainWindow
 
@@ -122,6 +122,9 @@ def test_station_and_time_inputs_share_rows():
     assert window.before.parent() is window.before_field
     assert window.station_fields.layout().stretch(0) == window.station_fields.layout().stretch(1) == 1
     assert window.time_fields.layout().stretch(0) == window.time_fields.layout().stretch(1) == 1
+    row, role = window.station_fields.parent().layout().getWidgetPosition(window.station_fields)
+    assert row >= 0
+    assert role == QFormLayout.ItemRole.SpanningRole
     window.close()
     assert app is not None
 
