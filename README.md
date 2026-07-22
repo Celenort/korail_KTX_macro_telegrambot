@@ -57,6 +57,38 @@ powershell -ExecutionPolicy Bypass -File .\build_windows.ps1
 빌드 결과는 `dist\KTX 자동예약\KTX 자동예약.exe`입니다. 배포할 때는
 `KTX 자동예약` 폴더 전체를 압축하세요.
 
+### Windows에서 앱 실행이 차단되는 경우
+
+현재 GitHub Release의 포터블 EXE는 상용 코드 서명 인증서로 서명되지 않았습니다.
+따라서 Windows 11의 Smart App Control 또는 Microsoft Defender SmartScreen이
+`KTX 자동예약.exe`를 알 수 없는 앱으로 판단해 실행을 차단할 수 있습니다.
+
+먼저 표시된 화면을 확인하세요.
+
+- **`Windows의 PC 보호`와 `추가 정보`가 표시되는 경우(SmartScreen):** 다운로드한
+  Release와 SHA-256 값을 확인한 뒤, 출처를 신뢰하는 경우에만 `추가 정보` →
+  `실행`을 선택합니다.
+- **`스마트 앱 컨트롤에서 앱을 차단했습니다`가 표시되는 경우:** 앱별 `실행 허용`
+  버튼이 제공되지 않습니다. 공식적인 해결 방법은 앱을 Microsoft Store로
+  배포하거나 신뢰된 공급자의 RSA 코드 서명 인증서로 서명하는 것입니다.
+
+Smart App Control을 끄는 것은 권장하지 않습니다. Microsoft 안내에 따르면 한 번
+수동으로 끈 뒤 다시 켜려면 Windows를 초기화하거나 다시 설치해야 할 수 있습니다.
+그래도 본인이 직접 빌드했거나 Release 파일의 무결성과 출처를 확인했고 실행이
+반드시 필요한 경우에만 다음 순서로 변경하세요.
+
+1. Windows의 `설정`에서 `Windows 보안`을 엽니다.
+2. `앱 및 브라우저 컨트롤` → `스마트 앱 컨트롤 설정`으로 이동합니다.
+3. 화면의 복구 제한 안내를 다시 확인한 후 `끔`을 선택합니다.
+4. 프로그램 실행이 끝났더라도 이 설정은 즉시 다시 켤 수 없을 수 있으므로,
+   다른 출처의 프로그램 실행에 각별히 주의합니다.
+
+관련 Microsoft 공식 문서:
+
+- [Windows 보안의 앱 및 브라우저 컨트롤](https://support.microsoft.com/windows/windows-security-app-browser-control-in-the-windows-security-app)
+- [Smart App Control용 앱 코드 서명](https://learn.microsoft.com/windows/apps/develop/smart-app-control/code-signing-for-smart-app-control)
+- [Windows 앱 코드 서명 선택지](https://learn.microsoft.com/windows/apps/package-and-deploy/code-signing-options)
+
 ## 참고
 
 - 본 서비스는 [carpedm20/korail2](https://github.com/carpedm20/korail2)를 기반으로 합니다.
