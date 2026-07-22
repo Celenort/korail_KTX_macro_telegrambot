@@ -110,3 +110,29 @@ def test_reservation_request_rejects_unselected_stations(monkeypatch):
     warning.assert_called_once()
     window.close()
     assert app is not None
+
+
+def test_station_and_time_inputs_share_rows():
+    app = QApplication.instance() or QApplication([])
+    window = MainWindow()
+
+    assert window.source.parent() is window.station_fields
+    assert window.destination.parent() is window.station_fields
+    assert window.after.parent() is window.time_fields
+    assert window.before.parent() is window.time_fields
+    window.close()
+    assert app is not None
+
+
+def test_seat_strategy_is_enabled_only_for_multiple_passengers():
+    app = QApplication.instance() or QApplication([])
+    window = MainWindow()
+
+    window.passengers.setValue(1)
+    assert not window.strategy.isEnabled()
+    window.passengers.setValue(2)
+    assert window.strategy.isEnabled()
+    window.passengers.setValue(1)
+    assert not window.strategy.isEnabled()
+    window.close()
+    assert app is not None
