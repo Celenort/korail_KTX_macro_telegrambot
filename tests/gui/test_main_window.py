@@ -116,10 +116,12 @@ def test_station_and_time_inputs_share_rows():
     app = QApplication.instance() or QApplication([])
     window = MainWindow()
 
-    assert window.source.parent() is window.station_fields
-    assert window.destination.parent() is window.station_fields
-    assert window.after.parent() is window.time_fields
-    assert window.before.parent() is window.time_fields
+    assert window.source.parent() is window.source_field
+    assert window.destination.parent() is window.destination_field
+    assert window.after.parent() is window.after_field
+    assert window.before.parent() is window.before_field
+    assert window.station_fields.layout().stretch(0) == window.station_fields.layout().stretch(1) == 1
+    assert window.time_fields.layout().stretch(0) == window.time_fields.layout().stretch(1) == 1
     window.close()
     assert app is not None
 
