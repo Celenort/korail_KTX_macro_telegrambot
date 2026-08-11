@@ -15,6 +15,72 @@ make install     # 패키지 설치
 make run         # 실행
 ```
 
+## 텔레그램 없이 로컬에서 실행
+
+`local_cli.py`는 예약 성공/실패를 Windows 대화상자(WSL), Linux 데스크톱 알림,
+터미널 소리와 `local_notifications.log`로 알립니다. 비밀번호는 프롬프트에서만 받으며
+파일이나 명령 기록에 저장하지 않습니다.
+
+```bash
+python src/local_cli.py \\
+  --from 서울 --to 부산 --date 20260801 \\
+  --after 0900 --before 1200 --passengers 1
+```
+
+`--help`로 일반실/특실 우선순위, KTX 외 열차, 인원수 옵션을 확인할 수
+있습니다. 조회 간격은 기본 1초이며 더 짧게 설정하지 마세요.
+
+자격정보 파일은 1행에 코레일 회원번호, 2행에 비밀번호를 넣고
+`--credentials-file` 옵션으로 지정할 수 있습니다. 해당 파일은 Git 저장소 밖에
+보관하세요.
+
+## Windows GUI
+
+GUI 버전은 코레일 계정, 역, 날짜, 시간, 좌석 옵션을 화면에서 설정하고
+예약 루프를 시작·중지할 수 있습니다. 예약 성공 시 Windows 팝업과 소리를
+제공하며, Google OAuth로 Gmail을 연결하면 성공·치명적 오류 알림을
+지정한 수신 이메일로 발송합니다. Google 비밀번호를 앱에 입력할 필요가
+없으며 `gmail.send` 발신 권한과 계정 이메일 확인 권한만
+요청합니다. 최초 연동 시 Google Cloud에서 생성한 데스크톱 앱 OAuth JSON이
+필요하며, 승인 토큰은 Windows 자격 증명 관리자에 저장됩니다.
+
+배포용으로는 개발자의 프로덕션 데스크톱 OAuth JSON을 EXE와 같은 폴더에
+`oauth_client.json`으로 두면 됩니다. 이 경우 각 사용자는 Google Cloud를 설정할 필요 없이
+브라우저에서 자신의 Google 계정으로 로그인하고 권한만 승인합니다. 테스트 상태의
+OAuth 앱은 최대 100명의 테스트 사용자를 명시해야 하며 Gmail 권한이 포함된 승인은
+7일 후 만료됩니다. 일반 배포 전에는 OAuth 브랜딩·데이터 액세스 검증을 완료하세요.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\build_windows.ps1
+```
+
+빌드 결과는 `dist\KTX 자동예약\KTX 자동예약.exe`입니다. 배포할 때는
+`KTX 자동예약` 폴더 전체를 압축하세요.
+
+### Windows에서 앱 실행이 차단되는 경우
+
+현재 GitHub Release의 포터블 EXE는 상용 코드 서명 인증서로 서명되지 않았습니다.
+따라서 Windows 11의 Smart App Control 또는 Microsoft Defender SmartScreen이
+`KTX 자동예약.exe`를 알 수 없는 앱으로 판단해 실행을 차단할 수 있습니다.
+
+먼저 표시된 화면을 확인하세요.
+
+- **`Windows의 PC 보호`와 `추가 정보`가 표시되는 경우(SmartScreen):** 다운로드한
+  Release와 SHA-256 값을 확인한 뒤, 출처를 신뢰하는 경우에만 `추가 정보` →
+  `실행`을 선택합니다.
+- **`스마트 앱 컨트롤에서 앱을 차단했습니다`가 표시되는 경우:** 앱별 `실행 허용`
+  버튼이 제공되지 않습니다. 공식적인 해결 방법은 앱을 Microsoft Store로
+  배포하거나 신뢰된 공급자의 RSA 코드 서명 인증서로 서명하는 것입니다.
+
+실행이 필요한 경우 Windows 검색에서 `스마트 앱 컨트롤`을 검색한 뒤 해당 설정을
+끄세요.
+
+관련 Microsoft 공식 문서:
+
+- [Windows 보안의 앱 및 브라우저 컨트롤](https://support.microsoft.com/windows/windows-security-app-browser-control-in-the-windows-security-app)
+- [Smart App Control용 앱 코드 서명](https://learn.microsoft.com/windows/apps/develop/smart-app-control/code-signing-for-smart-app-control)
+- [Windows 앱 코드 서명 선택지](https://learn.microsoft.com/windows/apps/package-and-deploy/code-signing-options)
+
 ## 참고
 
 - 본 서비스는 [carpedm20/korail2](https://github.com/carpedm20/korail2)를 기반으로 합니다.
